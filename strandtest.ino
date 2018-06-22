@@ -55,6 +55,7 @@ struct Colors {
 
 int sectorIndices[8][2] = {{5,13},{6,14},{7,15}, {0,8}, {1,9}, {2,10}, {3,11}, {4,12}};
 int sectorFadeValues[8] = {255,223,191,159,127,95,63,31};
+int sectorFadePixelValues[16] = {255,239,223,207,191,175,159,143,127,111,95,79,63,47,31,15};
 
 
 // Don't forget to connect the ground wire to Arduino ground,
@@ -144,15 +145,25 @@ void loop() {
   }
 //  colorWipe(Color(colorArray[0], colorArray[1], colorArray[2]), 0);
 //  colorWipe(Color(orangeAttempt[0],orangeAttempt[1], orangeAttempt[2]), 0);
-  sectorFadeCycle(globalDelay, 0);
+//  sectorFadeCycle(globalDelay, 0);
+  granularSectorFadeCycle(globalDelay, 0);
 //  setOneSectorAndClearOthers(globalSectorIndex, Color(orangeAttempt[0], orangeAttempt[1], orangeAttempt[2]));
 //  rainbowCycle(20);
 }
 
-void sectorFadeCycle(uint8_t wait, uint32_t pixelColor){
+void sectorFadeCycle(int wait, uint32_t pixelColor){
   for(int i=0; i<NUM_SECTORS;i++){
     setSectorFade(i, 0);
     delay(wait);
+  }
+}
+
+void granularSectorFadeCycle(int wait, uint32_t pixelColor){
+  for(int i=0; i<NUM_SECTORS;i++){
+    for(int j=0; j<NUM_PIXELS_PER_SECTOR; j++){
+      setSectorFadeByPixel(i, j, 0);
+      delay(wait);
+    }
   }
 }
 
@@ -189,6 +200,30 @@ void setSectorFade(int sectorIndex, uint32_t pixelColor){
       }
     }
     strip.show();
+  }
+}
+
+void setSectorFadeByPixel(int sectorIndex, int sectorPixel, uint32_t pixelColor){
+  if(sectorIndex < NUM_SECTORS && sectorPixel < NUM_PIXELS_PER_SECTOR){
+    for(int i=0; i<NUM_SECTORS; i++){
+      int diffFromTargetSector = i - sectorIndex;
+
+      int adjustedOffset = 0;
+      if(diffFromTargetSector<0){
+        adjustedOffset = ((diffFromTargetSector + NUM_SECTORS) * 2) + sectorPixel;
+        setPixelInSectorColorDoNotUpdateDisplay(i, sectorPixel, Color(0, 0, sectorFadePixelValues[adjustedOffset]));
+      } else {
+        adjustedOffset = ((diffFromTargetSector) * 2) + sectorPixel;
+        setPixelInSectorColorDoNotUpdateDisplay(i, sectorPixel, Color(0, 0, sectorFadePixelValues[adjustedOffset]));
+      }
+    }
+    strip.show();
+  }
+}
+
+void setPixelInSectorColorDoNotUpdateDisplay(int sectorIndex, int pixelIndex, uint32_t pixelColor){
+  if(sectorIndex < NUM_SECTORS && pixelIndex < NUM_PIXELS_PER_SECTOR){
+    strip.setPixelColor(sectorIndices[sectorIndex][pixelIndex], pixelColor);
   }
 }
 
