@@ -20,11 +20,11 @@ Example sketch for driving Adafruit WS2801 pixels!
   high speed PWM drivers for 24 bit color per pixel
   2 pins are required to interface
 
-  Adafruit invests time and resources providing this open source code, 
-  please support Adafruit and open-source hardware by purchasing 
+  Adafruit invests time and resources providing this open source code,
+  please support Adafruit and open-source hardware by purchasing
   products from Adafruit!
 
-  Written by Limor Fried/Ladyada for Adafruit Industries.  
+  Written by Limor Fried/Ladyada for Adafruit Industries.
   BSD license, all text above must be included in any redistribution
 
 *****************************************************************************/
@@ -125,7 +125,7 @@ void serialEvent(){
 
 void loop() {
   // Some example procedures showing how to display to the pixels
-  
+
 //  colorWipe(Color(255, 0, 0), 50);
 //  colorWipe(Color(0, 255, 0), 50);
 //  colorWipe(Color(0, 0, 255), 50);
@@ -192,7 +192,7 @@ void setSectorFade(int sectorIndex, uint32_t pixelColor){
   if(sectorIndex < NUM_SECTORS){
     for(int i=0; i<NUM_SECTORS; i++){
       int diffFromTargetSector = i - sectorIndex;
-      
+
       if(diffFromTargetSector<0){
         setSectorColorDoNotUpdateDisplay(i, Color(0, 0, sectorFadeValues[diffFromTargetSector + NUM_SECTORS]));
       } else {
@@ -251,21 +251,21 @@ void setOnePixelAndClearOthers(int pixelIndex, uint32_t pixelColor){
 
 void rainbow(uint8_t wait) {
   int i, j;
-   
+
   for (j=0; j < 256; j++) {     // 3 cycles of all 256 colors in the wheel
     for (i=0; i < strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel( (i + j) % 255));
-    }  
+    }
     strip.show();   // write all the pixels out
     delay(wait);
   }
 }
 
-// Slightly different, this one makes the rainbow wheel equally distributed 
+// Slightly different, this one makes the rainbow wheel equally distributed
 // along the chain
 void rainbowCycle(uint8_t wait) {
   int i, j;
-  
+
   for (j=0; j < 256 * 5; j++) {     // 5 cycles of all 25 colors in the wheel
     for (i=0; i < strip.numPixels(); i++) {
       // tricky math! we use each pixel as a fraction of the full 96-color wheel
@@ -273,7 +273,7 @@ void rainbowCycle(uint8_t wait) {
       // Then add in j which makes the colors go around per pixel
       // the % 96 is to make the wheel cycle around
       strip.setPixelColor(i, Wheel( ((i * 256 / strip.numPixels()) + j) % 256) );
-    }  
+    }
     strip.show();   // write all the pixels out
     delay(wait);
   }
@@ -283,7 +283,7 @@ void rainbowCycle(uint8_t wait) {
 // good for testing purposes
 void colorWipe(uint32_t c, uint8_t wait) {
   int i;
-  
+
   for (i=0; i < strip.numPixels(); i++) {
       strip.setPixelColor(i, c);
       strip.show();
@@ -315,7 +315,8 @@ uint32_t Wheel(byte WheelPos)
    WheelPos -= 85;
    return Color(255 - WheelPos * 3, 0, WheelPos * 3);
   } else {
-   WheelPos -= 170; 
+   WheelPos -= 170;
    return Color(0, WheelPos * 3, 255 - WheelPos * 3);
   }
 }
+
