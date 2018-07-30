@@ -130,10 +130,7 @@ void loop() {
 //  colorWipe(Color(0, 255, 0), 50);
 //  colorWipe(Color(0, 0, 255), 50);
 //  rainbow(20);
-  int currentPotValue = analogRead(potPin);
 
-//  int currentColorValue = ((float)currentPotValue/1024.0) * 256.0;
-//  colorArray[currentColorIndex] = currentColorValue;
   if(setColor){
     for(int i=0; i<3; i++){
       Serial.print(colorArray[i]);
@@ -162,6 +159,7 @@ void granularSectorFadeCycle(int wait, uint32_t pixelColor){
   for(int i=0; i<NUM_SECTORS;i++){
     for(int j=0; j<NUM_PIXELS_PER_SECTOR; j++){
       setSectorFadeByPixel(i, j, 0);
+      strip.show();
       delay(wait);
     }
   }
@@ -217,7 +215,6 @@ void setSectorFadeByPixel(int sectorIndex, int sectorPixel, uint32_t pixelColor)
         setPixelInSectorColorDoNotUpdateDisplay(i, sectorPixel, Color(0, 0, sectorFadePixelValues[adjustedOffset]));
       }
     }
-    strip.show();
   }
 }
 
